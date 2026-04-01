@@ -794,6 +794,16 @@ export function ajax(
   change: number;
 }>;
 
+export function ajax(route: "/api/price_tracking/items/summary"): Promise<{
+  items: import("$lib/price_tracking").ItemSummary[];
+}>;
+
+export function ajax(
+  route: "/api/price_tracking/receipt_item/:id",
+  options?: RequestOptions,
+  params?: Record<string, string>
+): Promise<{ success: boolean; item?: any; error?: string }>;
+
 export async function ajax(
   route: string,
   options?: RequestOptions,

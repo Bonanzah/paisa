@@ -55,6 +55,16 @@ export interface PriceTrackingItemDetail {
   change: number;
 }
 
+export interface ItemSummary {
+  name: string;
+  unit: string;
+  latest_price: number;
+  avg_price: number;
+  change: number;
+  stores_count: number;
+  last_purchased: string;
+}
+
 export function formatChange(change: number): string {
   const sign = change >= 0 ? "▲" : "▼";
   return `${sign} ${Math.abs(change).toFixed(1)}%`;
