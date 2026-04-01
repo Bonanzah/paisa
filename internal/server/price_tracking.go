@@ -276,6 +276,69 @@ func GetPriceTrackingItem(db *gorm.DB, name string) gin.H {
 	}
 }
 
+type UpdateReceiptItemRequest struct {
+	Store    *string          `json:"store"`
+	Brand    *string          `json:"brand"`
+	Variant  *string          `json:"variant"`
+	Quantity *decimal.Decimal `json:"quantity"`
+	Price    *decimal.Decimal `json:"price"`
+}
+
+func UpdateReceiptItem(db *gorm.DB, id uint, request UpdateReceiptItemRequest) (gin.H, int) {
+	item, err := receipt_item.FindByID(db, id)
+	if err != nil {
+		return gin.H{"success": false, "error": "item not found"}, 404
+	}
+
+	if request.Store != nil {
+		item.Store = normalizeToTitle(*request.Store)
+	}
+	if request.Brand != nil {
+		item.Brand = normalizeToTitle(*request.Brand)
+	}
+	if request.Variant != nil {
+		item.Variant = normalizeToLower(*request.Variant)
+	}
+
+	if request.Quantity != nil {
+		if request.Quantity.IsZero() || request.Quantity.IsNegative() {
+			return gin.H{"success": false, "error": "quantity must be positive"}, 400
+		}
+		item.Quantity = *request.Quantity
+	}
+	if request.Price != nil {
+		if request.Price.IsNegative() {
+			return gin.H{"success": false, "error": "price must not be negative"}, 400
+		}
+		item.Price = *request.Price
+	}
+
+	if request.Quantity != nil || request.Price != nil {
+		item.UnitPrice = item.Price.Div(item.Quantity)
+	}
+
+	err = receipt_item.Update(db, item)
+	if err != nil {
+		return gin.H{"success": false, "error": err.Error()}, 500
+	}
+
+	return gin.H{"success": true, "item": item}, 200
+}
+
+func DeleteReceiptItem(db *gorm.DB, id uint) (gin.H, int) {
+	_, err := receipt_item.FindByID(db, id)
+	if err != nil {
+		return gin.H{"success": false, "error": "item not found"}, 404
+	}
+
+	err = receipt_item.Delete(db, id)
+	if err != nil {
+		return gin.H{"success": false, "error": err.Error()}, 500
+	}
+
+	return gin.H{"success": true}, 200
+}
+
 func sortMovers(movers []PriceMover, ascending bool) {
 	for i := 0; i < len(movers); i++ {
 		for j := i + 1; j < len(movers); j++ {

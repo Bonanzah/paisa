@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -395,6 +396,31 @@ func Build(db *gorm.DB, enableCompression bool) *gin.Engine {
 	router.GET("/api/price_tracking/item/:name", func(c *gin.Context) {
 		name := c.Param("name")
 		c.JSON(200, GetPriceTrackingItem(db, name))
+	})
+
+	router.PUT("/api/price_tracking/receipt_item/:id", func(c *gin.Context) {
+		id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "error": "invalid id"})
+			return
+		}
+		var request UpdateReceiptItemRequest
+		if err := c.ShouldBindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "error": err.Error()})
+			return
+		}
+		result, status := UpdateReceiptItem(db, uint(id), request)
+		c.JSON(status, result)
+	})
+
+	router.DELETE("/api/price_tracking/receipt_item/:id", func(c *gin.Context) {
+		id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "error": "invalid id"})
+			return
+		}
+		result, status := DeleteReceiptItem(db, uint(id))
+		c.JSON(status, result)
 	})
 
 	router.NoRoute(func(c *gin.Context) {
