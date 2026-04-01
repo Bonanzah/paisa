@@ -11,6 +11,7 @@ import (
 	"github.com/ananthakumaran/paisa/internal/model/commodity"
 	mutualfundModel "github.com/ananthakumaran/paisa/internal/model/mutualfund/scheme"
 	npsModel "github.com/ananthakumaran/paisa/internal/model/nps/scheme"
+	receiptItemModel "github.com/ananthakumaran/paisa/internal/model/receipt_item"
 	"github.com/ananthakumaran/paisa/internal/model/portfolio"
 	"github.com/ananthakumaran/paisa/internal/model/posting"
 	"github.com/ananthakumaran/paisa/internal/model/price"
@@ -31,6 +32,7 @@ func AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&price.Price{})
 	db.AutoMigrate(&cii.CII{})
 	db.AutoMigrate(&cache.Cache{})
+	db.AutoMigrate(&receiptItemModel.ReceiptItem{})
 }
 
 func SyncJournal(db *gorm.DB) (string, error) {
