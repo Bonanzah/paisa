@@ -460,7 +460,7 @@ func sortRecentEntries(entries []RecentEntry) {
 }
 
 func setToSlice(set map[string]bool) []string {
-	var result []string
+	result := make([]string, 0, len(set))
 	for key := range set {
 		result = append(result, key)
 	}
