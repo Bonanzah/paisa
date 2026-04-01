@@ -89,14 +89,19 @@
 
             <p class="is-size-7 has-text-weight-bold has-text-grey-dark mb-2">INCREASES</p>
             {#each dashboard.increases ?? [] as mover (mover.name)}
-              <div class="is-flex is-justify-content-space-between is-align-items-center py-2 border-bottom">
+              <div
+                class="is-flex is-justify-content-space-between is-align-items-center py-2 border-bottom"
+              >
                 <a class="secondary-link" href="/more/price_tracking/item/{mover.name}">
                   {mover.name}
                 </a>
                 <span class="is-flex" style="gap: 12px;">
-                  <span class="has-text-grey is-size-7">{formatCurrency(mover.latest_price)}/{mover.unit}</span>
-                  <span class="has-text-weight-bold is-size-7" style="color: {changeColor(mover.change)}"
-                    >{formatChange(mover.change)}</span
+                  <span class="has-text-grey is-size-7"
+                    >{formatCurrency(mover.latest_price)}/{mover.unit}</span
+                  >
+                  <span
+                    class="has-text-weight-bold is-size-7"
+                    style="color: {changeColor(mover.change)}">{formatChange(mover.change)}</span
                   >
                 </span>
               </div>
@@ -107,14 +112,19 @@
 
             <p class="is-size-7 has-text-weight-bold has-text-grey-dark mb-2 mt-4">DECREASES</p>
             {#each dashboard.decreases ?? [] as mover (mover.name)}
-              <div class="is-flex is-justify-content-space-between is-align-items-center py-2 border-bottom">
+              <div
+                class="is-flex is-justify-content-space-between is-align-items-center py-2 border-bottom"
+              >
                 <a class="secondary-link" href="/more/price_tracking/item/{mover.name}">
                   {mover.name}
                 </a>
                 <span class="is-flex" style="gap: 12px;">
-                  <span class="has-text-grey is-size-7">{formatCurrency(mover.latest_price)}/{mover.unit}</span>
-                  <span class="has-text-weight-bold is-size-7" style="color: {changeColor(mover.change)}"
-                    >{formatChange(mover.change)}</span
+                  <span class="has-text-grey is-size-7"
+                    >{formatCurrency(mover.latest_price)}/{mover.unit}</span
+                  >
+                  <span
+                    class="has-text-weight-bold is-size-7"
+                    style="color: {changeColor(mover.change)}">{formatChange(mover.change)}</span
                   >
                 </span>
               </div>
@@ -157,7 +167,23 @@
                 bind:value={searchQuery}
               />
               <span class="icon is-left">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  ><circle cx="11" cy="11" r="8" /><line
+                    x1="21"
+                    y1="21"
+                    x2="16.65"
+                    y2="16.65"
+                  /></svg
+                >
               </span>
             </div>
           </div>
@@ -196,7 +222,9 @@
                     {formatCurrency(item.avg_price)}/{item.unit}
                   </td>
                   <td class="has-text-right">
-                    <span style="color: {changeColor(item.change)}">{formatChange(item.change)}</span>
+                    <span style="color: {changeColor(item.change)}"
+                      >{formatChange(item.change)}</span
+                    >
                   </td>
                   <td class="has-text-right">{item.stores_count}</td>
                   <td class="has-text-right">{dayjs(item.last_purchased).format("MMM D, YYYY")}</td>

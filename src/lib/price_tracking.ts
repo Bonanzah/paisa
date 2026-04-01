@@ -126,9 +126,7 @@ export function renderPriceTimeline(
     .attr("transform", `translate(0,${height})`)
     .call(d3.axisBottom(x).ticks(d3.timeMonth.every(1)).tickFormat(d3.timeFormat("%b %Y")));
 
-  g.append("g").call(
-    d3.axisLeft(y).tickFormat((d) => formatCurrency(d as number))
-  );
+  g.append("g").call(d3.axisLeft(y).tickFormat((d) => formatCurrency(d as number)));
 
   const line = d3
     .line<ReceiptItem>()
@@ -180,19 +178,19 @@ export function renderPriceTimeline(
       .attr("r", 4)
       .attr("fill", color)
       .on("mouseenter", (event: MouseEvent, d: ReceiptItem) => {
-        tooltip
-          .style("display", "block")
-          .html(
-            `<strong>${d.store}</strong><br/>` +
-              `${formatCurrency(d.unit_price)}/${d.unit}<br/>` +
-              `${new Date(d.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` +
-              (d.variant ? `<br/>${d.variant}` : "")
-          );
+        tooltip.style("display", "block").html(
+          `<strong>${d.store}</strong><br/>` +
+            `${formatCurrency(d.unit_price)}/${d.unit}<br/>` +
+            `${new Date(d.date).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric"
+            })}` +
+            (d.variant ? `<br/>${d.variant}` : "")
+        );
       })
       .on("mousemove", (event: MouseEvent) => {
-        tooltip
-          .style("left", event.pageX + 12 + "px")
-          .style("top", event.pageY - 10 + "px");
+        tooltip.style("left", event.pageX + 12 + "px").style("top", event.pageY - 10 + "px");
       })
       .on("mouseleave", () => {
         tooltip.style("display", "none");

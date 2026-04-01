@@ -39,25 +39,33 @@
   }
 
   async function saveEdit(id: number) {
-    await ajax("/api/price_tracking/receipt_item/:id", {
-      method: "PUT",
-      body: JSON.stringify({
-        store: editForm.store,
-        brand: editForm.brand,
-        variant: editForm.variant,
-        quantity: parseFloat(editForm.quantity),
-        price: parseFloat(editForm.price)
-      })
-    }, { id: String(id) });
+    await ajax(
+      "/api/price_tracking/receipt_item/:id",
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          store: editForm.store,
+          brand: editForm.brand,
+          variant: editForm.variant,
+          quantity: parseFloat(editForm.quantity),
+          price: parseFloat(editForm.price)
+        })
+      },
+      { id: String(id) }
+    );
     editingId = null;
     detail = await ajax("/api/price_tracking/item/:name", null, { name });
     setTimeout(renderChart, 0);
   }
 
   async function deleteEntry(id: number) {
-    await ajax("/api/price_tracking/receipt_item/:id", {
-      method: "DELETE"
-    }, { id: String(id) });
+    await ajax(
+      "/api/price_tracking/receipt_item/:id",
+      {
+        method: "DELETE"
+      },
+      { id: String(id) }
+    );
     deleteConfirmId = null;
     detail = await ajax("/api/price_tracking/item/:name", null, { name });
     setTimeout(renderChart, 0);
@@ -197,7 +205,9 @@
           <div class="column is-12">
             {#if bestStore}
               <div class="notification is-light is-size-7 py-2 px-4 mb-3">
-                Best price: <strong>{formatCurrency(bestStore.latestPrice)}/{detail.latest.unit}</strong>
+                Best price: <strong
+                  >{formatCurrency(bestStore.latestPrice)}/{detail.latest.unit}</strong
+                >
                 at <strong>{bestStore.store}</strong>
                 {#if bestSavings > 0.5}
                   (saves {bestSavings.toFixed(0)}% vs avg)
@@ -218,7 +228,9 @@
                 {#each storeComparisons as sc (sc.store)}
                   <tr>
                     <td>{sc.store}</td>
-                    <td class="has-text-right">{formatCurrency(sc.latestPrice)}/{detail.latest.unit}</td>
+                    <td class="has-text-right"
+                      >{formatCurrency(sc.latestPrice)}/{detail.latest.unit}</td
+                    >
                     <td class="has-text-right">
                       <span style="color: {changeColor(sc.vsAvg)}">{formatChange(sc.vsAvg)}</span>
                     </td>
@@ -232,22 +244,24 @@
 
         <div class="column is-12">
           <svg id="d3-price-timeline" height="300" width="100%"></svg>
-            {#if chartLegends.length > 1}
-              <div class="is-flex is-flex-wrap-wrap mt-2" style="gap: 12px;">
-                {#each chartLegends as legend}
-                  <button
-                    class="button is-small is-ghost px-2"
-                    style="text-decoration: none;"
-                    on:click={() => { if (legend.toggle) legend.toggle(); }}
-                  >
-                    <span
-                      style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: {legend.color}; margin-right: 6px;"
-                    ></span>
-                    {legend.label}
-                  </button>
-                {/each}
-              </div>
-            {/if}
+          {#if chartLegends.length > 1}
+            <div class="is-flex is-flex-wrap-wrap mt-2" style="gap: 12px;">
+              {#each chartLegends as legend}
+                <button
+                  class="button is-small is-ghost px-2"
+                  style="text-decoration: none;"
+                  on:click={() => {
+                    if (legend.toggle) legend.toggle();
+                  }}
+                >
+                  <span
+                    style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: {legend.color}; margin-right: 6px;"
+                  ></span>
+                  {legend.label}
+                </button>
+              {/each}
+            </div>
+          {/if}
         </div>
 
         <div class="column is-12">
@@ -297,7 +311,10 @@
                         />
                       </td>
                       <td class="has-text-right">
-                        <button class="button is-small is-success mr-1" on:click={() => saveEdit(entry.id)}>Save</button>
+                        <button
+                          class="button is-small is-success mr-1"
+                          on:click={() => saveEdit(entry.id)}>Save</button
+                        >
                         <button class="button is-small" on:click={cancelEdit}>Cancel</button>
                       </td>
                     </tr>
@@ -315,8 +332,13 @@
                       <td class="has-text-right">
                         {#if deleteConfirmId === entry.id}
                           <span class="is-size-7 mr-2">Delete?</span>
-                          <button class="button is-small is-danger mr-1" on:click={() => deleteEntry(entry.id)}>Yes</button>
-                          <button class="button is-small" on:click={() => (deleteConfirmId = null)}>No</button>
+                          <button
+                            class="button is-small is-danger mr-1"
+                            on:click={() => deleteEntry(entry.id)}>Yes</button
+                          >
+                          <button class="button is-small" on:click={() => (deleteConfirmId = null)}
+                            >No</button
+                          >
                         {:else}
                           {#if pctChange !== null}
                             <span style="color: {changeColor(pctChange)}" class="mr-2"
@@ -325,10 +347,18 @@
                           {:else}
                             <span class="has-text-grey mr-2">—</span>
                           {/if}
-                          <button class="button is-small is-ghost px-1" title="Edit" on:click={() => startEdit(entry)}>
+                          <button
+                            class="button is-small is-ghost px-1"
+                            title="Edit"
+                            on:click={() => startEdit(entry)}
+                          >
                             ✎
                           </button>
-                          <button class="button is-small is-ghost px-1 has-text-danger" title="Delete" on:click={() => (deleteConfirmId = entry.id)}>
+                          <button
+                            class="button is-small is-ghost px-1 has-text-danger"
+                            title="Delete"
+                            on:click={() => (deleteConfirmId = entry.id)}
+                          >
                             ✕
                           </button>
                         {/if}
