@@ -28,6 +28,46 @@
       })
     : [];
 
+  interface StoreComparison {
+    store: string;
+    latestPrice: number;
+    vsAvg: number;
+    lastDate: string;
+  }
+
+  $: storeComparisons = (() => {
+    if (!detail || detail.entries.length === 0) return [] as StoreComparison[];
+    const latestByStore = new Map<string, { price: number; date: string }>();
+    for (const e of detail.entries) {
+      if (!latestByStore.has(e.store)) {
+        latestByStore.set(e.store, { price: e.unit_price, date: e.date });
+      }
+    }
+    const prices = Array.from(latestByStore.values()).map((v) => v.price);
+    const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+    const result: StoreComparison[] = [];
+    for (const [store, data] of latestByStore) {
+      result.push({
+        store,
+        latestPrice: data.price,
+        vsAvg: avg !== 0 ? ((data.price - avg) / avg) * 100 : 0,
+        lastDate: data.date
+      });
+    }
+    result.sort((a, b) => a.latestPrice - b.latestPrice);
+    return result;
+  })();
+
+  $: bestStore = storeComparisons.length > 0 ? storeComparisons[0] : null;
+  $: avgAcrossStores =
+    storeComparisons.length > 0
+      ? storeComparisons.reduce((a, b) => a + b.latestPrice, 0) / storeComparisons.length
+      : 0;
+  $: bestSavings =
+    bestStore && avgAcrossStores > 0
+      ? ((avgAcrossStores - bestStore.latestPrice) / avgAcrossStores) * 100
+      : 0;
+
   function renderChart() {
     if (chartDestroy) chartDestroy();
     if (!detail || detail.entries.length === 0) return;
@@ -105,6 +145,43 @@
             </div>
           </div>
         </div>
+
+        {#if storeComparisons.length > 1}
+          <div class="column is-12">
+            {#if bestStore}
+              <div class="notification is-light is-size-7 py-2 px-4 mb-3">
+                Best price: <strong>{formatCurrency(bestStore.latestPrice)}/{detail.latest.unit}</strong>
+                at <strong>{bestStore.store}</strong>
+                {#if bestSavings > 0.5}
+                  (saves {bestSavings.toFixed(0)}% vs avg)
+                {/if}
+              </div>
+            {/if}
+
+            <table class="table is-fullwidth is-size-7 mb-4">
+              <thead>
+                <tr>
+                  <th>Store</th>
+                  <th class="has-text-right">Latest Price</th>
+                  <th class="has-text-right">vs Avg</th>
+                  <th class="has-text-right">Last Seen</th>
+                </tr>
+              </thead>
+              <tbody>
+                {#each storeComparisons as sc (sc.store)}
+                  <tr>
+                    <td>{sc.store}</td>
+                    <td class="has-text-right">{formatCurrency(sc.latestPrice)}/{detail.latest.unit}</td>
+                    <td class="has-text-right">
+                      <span style="color: {changeColor(sc.vsAvg)}">{formatChange(sc.vsAvg)}</span>
+                    </td>
+                    <td class="has-text-right">{dayjs(sc.lastDate).format("MMM D, YYYY")}</td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+        {/if}
 
         <div class="column is-12">
           <svg id="d3-price-timeline" height="300" width="100%"></svg>
