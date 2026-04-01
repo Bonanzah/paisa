@@ -1,0 +1,8 @@
+{"type":"server-started","port":58567,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:58567","screen_dir":"/Volumes/Develop/Repos/Aitchdien/paisa/.superpowers/brainstorm/22220-1774997533/content","state_dir":"/Volumes/Develop/Repos/Aitchdien/paisa/.superpowers/brainstorm/22220-1774997533/state"}
+{"type":"screen-added","file":"/Volumes/Develop/Repos/Aitchdien/paisa/.superpowers/brainstorm/22220-1774997533/content/frontend-view.html"}
+{"source":"user-event","type":"click","text":"C\n    \n      Both — Item View + Dashboard\n      Dashboard as the landing page with summary cards, click through to item-level detail pages. Most complete but more to build.","choice":"c","id":null,"timestamp":1774999393738}
+{"source":"user-event","type":"click","text":"C\n    \n      Both — Item View + Dashboard\n      Dashboard as the landing page with summary cards, click through to item-level detail pages. Most complete but more to build.","choice":"c","id":null,"timestamp":1774999402168}
+{"source":"user-event","type":"click","text":"C\n    \n      Both — Item View + Dashboard\n      Dashboard as the landing page with summary cards, click through to item-level detail pages. Most complete but more to build.","choice":"c","id":null,"timestamp":1774999403367}
+{"type":"screen-added","file":"/Volumes/Develop/Repos/Aitchdien/paisa/.superpowers/brainstorm/22220-1774997533/content/frontend-design.html"}
+{"type":"screen-added","file":"/Volumes/Develop/Repos/Aitchdien/paisa/.superpowers/brainstorm/22220-1774997533/content/waiting.html"}
+{"type":"server-stopped","reason":"idle timeout"}

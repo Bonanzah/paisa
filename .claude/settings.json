@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la /Volumes/Develop/Repos/Aitchdien/paisa/src/routes/\\\\\\(app\\\\\\))",
+      "Bash(grep -E \"\\\\.ts$\")",
+      "Bash(git -C /Volumes/Develop/Repos/Aitchdien/paisa log --oneline)",
+      "Bash(git -C /Volumes/Develop/Repos/Aitchdien/paisa branch -a)",
+      "Bash(ls -la /Volumes/Develop/Repos/Aitchdien/paisa/src/routes/\\\\\\(app\\\\\\)/)",
+      "Bash(ls -la /Volumes/Develop/Repos/Aitchdien/paisa/src/routes/\\\\\\(app\\\\\\)/expense/)",
+      "Bash(ls -la /Volumes/Develop/Repos/Aitchdien/paisa/src/routes/\\\\\\(app\\\\\\)/income/)",
+      "Bash(ls -la /Volumes/Develop/Repos/Aitchdien/paisa/internal/server/*.go)",
+      "Bash(/Users/hrobinson/.claude/plugins/cache/superpowers-marketplace/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh --project-dir /Volumes/Develop/Repos/Aitchdien/paisa)",
+      "Bash(grep -E \"\\\\.\\(ts|svelte\\)$\")",
+      "Bash(go build:*)",
+      "Bash(go vet:*)",
+      "Bash(go tool:*)",
+      "Bash(gofmt -e internal/server/price_tracking.go)",
+      "Bash(gofmt -l internal/server/price_tracking.go)",
+      "Bash(gofmt -l internal/server/server.go)",
+      "Bash(gofmt -l internal/server/price_tracking.go internal/server/server.go)",
+      "Bash(./node_modules/.bin/vite build:*)",
+      "Bash(npx vite:*)",
+      "Bash(ls /Volumes/Develop/Repos/Aitchdien/paisa/src/routes/\\\\\\(app\\\\\\)/more/)",
+      "Bash(git add:*)",
+      "Bash(ls /Volumes/Develop/Repos/Aitchdien/paisa/src/routes/\\\\\\(app\\\\\\)/more/price_tracking/)",
+      "Bash(npx prettier:*)",
+      "Bash(gofmt -l internal/server/price_tracking.go internal/model/receipt_item/receipt_item.go)",
+      "Bash(go test:*)",
+      "Bash(chmod +x /Volumes/Develop/Repos/Aitchdien/paisa/scripts/seed_price_tracking.sh)"
+    ],
+    "additionalDirectories": [
+      "/Volumes/Develop/Repos/Aitchdien/paisa/src/routes/(app)/more/price_tracking/item"
+    ]
+  }
+}

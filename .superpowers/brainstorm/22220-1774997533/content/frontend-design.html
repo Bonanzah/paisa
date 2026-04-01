@@ -1,0 +1,158 @@
+<h2>Price Tracking — Frontend Layout</h2>
+<p class="subtitle">Dashboard landing page with drill-down to item detail</p>
+
+<div class="section">
+  <h3>Dashboard Page — <code>/price_tracking</code></h3>
+  <div class="mockup">
+    <div class="mockup-header">Price Tracking Dashboard</div>
+    <div class="mockup-body" style="padding: 16px; font-size: 13px;">
+      <!-- Top summary cards -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+        <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #888;">Items Tracked</div>
+          <div style="font-size: 24px; font-weight: bold; margin-top: 4px;">47</div>
+        </div>
+        <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #888;">Stores</div>
+          <div style="font-size: 24px; font-weight: bold; margin-top: 4px;">5</div>
+        </div>
+        <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #888;">Avg Price Change (30d)</div>
+          <div style="font-size: 24px; font-weight: bold; margin-top: 4px; color: #e74c3c;">▲ 3.2%</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <!-- Biggest movers -->
+        <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #888; margin-bottom: 8px;">Biggest Increases (30d)</div>
+          <div style="border-bottom: 1px solid #eee; padding: 6px 0; display: flex; justify-content: space-between;">
+            <span style="color: #4a90d9; cursor: pointer;">Eggs (1 doz)</span>
+            <span style="color: #e74c3c;">▲ 15.3%</span>
+          </div>
+          <div style="border-bottom: 1px solid #eee; padding: 6px 0; display: flex; justify-content: space-between;">
+            <span style="color: #4a90d9; cursor: pointer;">Gas (1 gal)</span>
+            <span style="color: #e74c3c;">▲ 8.1%</span>
+          </div>
+          <div style="padding: 6px 0; display: flex; justify-content: space-between;">
+            <span style="color: #4a90d9; cursor: pointer;">Butter (1 lb)</span>
+            <span style="color: #e74c3c;">▲ 6.2%</span>
+          </div>
+        </div>
+
+        <!-- Biggest decreases -->
+        <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #888; margin-bottom: 8px;">Biggest Decreases (30d)</div>
+          <div style="border-bottom: 1px solid #eee; padding: 6px 0; display: flex; justify-content: space-between;">
+            <span style="color: #4a90d9; cursor: pointer;">Chicken Breast (1 lb)</span>
+            <span style="color: #27ae60;">▼ 12.1%</span>
+          </div>
+          <div style="border-bottom: 1px solid #eee; padding: 6px 0; display: flex; justify-content: space-between;">
+            <span style="color: #4a90d9; cursor: pointer;">Rice (5 lb)</span>
+            <span style="color: #27ae60;">▼ 4.8%</span>
+          </div>
+          <div style="padding: 6px 0; display: flex; justify-content: space-between;">
+            <span style="color: #4a90d9; cursor: pointer;">Bananas (1 lb)</span>
+            <span style="color: #27ae60;">▼ 2.3%</span>
+          </div>
+        </div>
+
+        <!-- Store comparison -->
+        <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #888; margin-bottom: 8px;">Cheapest Store by Item Count</div>
+          <div style="border-bottom: 1px solid #eee; padding: 6px 0;">Costco — <strong>18</strong> items cheapest</div>
+          <div style="border-bottom: 1px solid #eee; padding: 6px 0;">Walmart — <strong>14</strong> items cheapest</div>
+          <div style="padding: 6px 0;">Trader Joe's — <strong>9</strong> items cheapest</div>
+        </div>
+
+        <!-- Recent entries -->
+        <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #888; margin-bottom: 8px;">Recently Added</div>
+          <div style="font-size: 12px;">
+            <div style="border-bottom: 1px solid #eee; padding: 6px 0;">Mar 28 — Costco — 8 items</div>
+            <div style="border-bottom: 1px solid #eee; padding: 6px 0;">Mar 25 — Walmart — 12 items</div>
+            <div style="padding: 6px 0;">Mar 22 — Trader Joe's — 6 items</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Item Detail Page — <code>/price_tracking/item/[name]</code></h3>
+  <div class="mockup">
+    <div class="mockup-header">Item Detail: Milk</div>
+    <div class="mockup-body" style="padding: 16px; font-size: 13px;">
+      <!-- Header stats -->
+      <div style="display: flex; align-items: baseline; gap: 24px; margin-bottom: 16px;">
+        <h3 style="margin: 0;">Milk</h3>
+        <span>Latest: <strong>$4.89/gal</strong></span>
+        <span>Avg (90d): <strong>$4.52/gal</strong></span>
+        <span style="color: #e74c3c;">▲ 8.2% (90d)</span>
+      </div>
+
+      <!-- Filters -->
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <select class="mock-input" style="width: auto; padding: 4px 8px; font-size: 12px;">
+          <option>All Stores</option>
+          <option>Costco</option>
+          <option>Walmart</option>
+        </select>
+        <select class="mock-input" style="width: auto; padding: 4px 8px; font-size: 12px;">
+          <option>All Brands</option>
+          <option>Kirkland</option>
+          <option>Great Value</option>
+        </select>
+        <select class="mock-input" style="width: auto; padding: 4px 8px; font-size: 12px;">
+          <option>All Variants</option>
+          <option>Whole, Organic</option>
+          <option>2%, Regular</option>
+        </select>
+      </div>
+
+      <!-- Chart -->
+      <div class="placeholder" style="height: 200px; margin-bottom: 16px;">📈 Unit price over time — line chart with one line per store (filterable by brand/variant)</div>
+
+      <!-- History table -->
+      <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+        <tr style="border-bottom: 2px solid #ddd; text-align: left;">
+          <th style="padding: 6px;">Date</th>
+          <th style="padding: 6px;">Store</th>
+          <th style="padding: 6px;">Brand</th>
+          <th style="padding: 6px;">Variant</th>
+          <th style="padding: 6px;">Qty</th>
+          <th style="padding: 6px;">Unit Price</th>
+          <th style="padding: 6px;">Change</th>
+        </tr>
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 6px;">Mar 28</td>
+          <td style="padding: 6px;">Costco</td>
+          <td style="padding: 6px;">Kirkland</td>
+          <td style="padding: 6px;">Whole, Organic</td>
+          <td style="padding: 6px;">2 gal</td>
+          <td style="padding: 6px;">$4.89</td>
+          <td style="padding: 6px; color: #e74c3c;">▲ 2.1%</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 6px;">Mar 15</td>
+          <td style="padding: 6px;">Walmart</td>
+          <td style="padding: 6px;">Great Value</td>
+          <td style="padding: 6px;">Whole</td>
+          <td style="padding: 6px;">1 gal</td>
+          <td style="padding: 6px;">$4.29</td>
+          <td style="padding: 6px; color: #27ae60;">▼ 1.4%</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px;">Mar 2</td>
+          <td style="padding: 6px;">Costco</td>
+          <td style="padding: 6px;">Kirkland</td>
+          <td style="padding: 6px;">Whole, Organic</td>
+          <td style="padding: 6px;">2 gal</td>
+          <td style="padding: 6px;">$4.79</td>
+          <td style="padding: 6px; color: #888;">—</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

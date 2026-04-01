@@ -769,6 +769,31 @@ export function ajax(
 
 export function ajax(route: "/api/ping"): Promise<{ success: boolean; error?: string }>;
 
+export function ajax(route: "/api/price_tracking"): Promise<{
+  items_count: number;
+  stores_count: number;
+  avg_change: number;
+  increases: any[];
+  decreases: any[];
+  store_ranking: any[];
+  recent: any[];
+}>;
+export function ajax(route: "/api/price_tracking/items"): Promise<{ items: string[] }>;
+export function ajax(
+  route: "/api/price_tracking/item/:name",
+  options?: RequestOptions,
+  params?: Record<string, string>
+): Promise<{
+  name: string;
+  entries: any[];
+  stores: string[];
+  brands: string[];
+  variants: string[];
+  latest: any;
+  avg: number;
+  change: number;
+}>;
+
 export async function ajax(
   route: string,
   options?: RequestOptions,

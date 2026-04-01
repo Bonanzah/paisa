@@ -1,0 +1,83 @@
+<h2>What should the price tracking page show?</h2>
+<p class="subtitle">Pick the primary view — we can combine elements later</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Item-Centric View</h3>
+      <p>Search/browse items, select one, see its price history chart across stores over time. Like a stock ticker for groceries.</p>
+      <div class="mockup" style="margin-top: 12px;">
+        <div class="mockup-header">Preview: Item-Centric</div>
+        <div class="mockup-body" style="padding: 16px; font-size: 13px;">
+          <div style="display: flex; gap: 16px;">
+            <div style="width: 200px; border-right: 1px solid #ccc; padding-right: 12px;">
+              <input class="mock-input" placeholder="Search items..." style="width: 100%; margin-bottom: 8px;">
+              <div style="padding: 6px 0; border-bottom: 1px solid #eee;"><strong>Milk (1 gal)</strong></div>
+              <div style="padding: 6px 0; border-bottom: 1px solid #eee; opacity: 0.6;">Eggs (1 doz)</div>
+              <div style="padding: 6px 0; border-bottom: 1px solid #eee; opacity: 0.6;">Gas (1 gal)</div>
+              <div style="padding: 6px 0; opacity: 0.6;">Bread (loaf)</div>
+            </div>
+            <div style="flex: 1;">
+              <h3 style="margin: 0 0 4px;">Milk (1 gal)</h3>
+              <div style="display: flex; gap: 24px; font-size: 12px; margin-bottom: 12px;">
+                <span>Current: <strong>$4.89</strong></span>
+                <span>Avg: <strong>$4.52</strong></span>
+                <span style="color: #e74c3c;">▲ 8.2% (1yr)</span>
+              </div>
+              <div class="placeholder" style="height: 180px;">📈 Price over time line chart (one line per store)</div>
+              <table style="width: 100%; font-size: 12px; margin-top: 12px; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #ddd;"><th style="text-align: left;">Date</th><th>Store</th><th>Qty</th><th>Unit Price</th></tr>
+                <tr style="border-bottom: 1px solid #eee;"><td>Mar 28</td><td>Costco</td><td>2</td><td>$4.89</td></tr>
+                <tr style="border-bottom: 1px solid #eee;"><td>Mar 15</td><td>Walmart</td><td>1</td><td>$4.29</td></tr>
+                <tr><td>Mar 2</td><td>Costco</td><td>2</td><td>$4.79</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Dashboard Overview</h3>
+      <p>Top movers, biggest price changes, store comparison summaries. At-a-glance inflation dashboard.</p>
+      <div class="mockup" style="margin-top: 12px;">
+        <div class="mockup-header">Preview: Dashboard</div>
+        <div class="mockup-body" style="padding: 16px; font-size: 13px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+              <div style="font-size: 11px; text-transform: uppercase; color: #888;">Biggest Increases (30d)</div>
+              <div style="margin-top: 8px;">
+                <div>Eggs (1 doz) <span style="color: #e74c3c; float: right;">▲ 15.3%</span></div>
+                <div>Gas (1 gal) <span style="color: #e74c3c; float: right;">▲ 8.1%</span></div>
+                <div>Butter (1 lb) <span style="color: #e74c3c; float: right;">▲ 6.2%</span></div>
+              </div>
+            </div>
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 12px;">
+              <div style="font-size: 11px; text-transform: uppercase; color: #888;">Best Deals by Store</div>
+              <div style="margin-top: 8px;">
+                <div>Costco — 12 items cheapest</div>
+                <div>Walmart — 8 items cheapest</div>
+                <div>Trader Joe's — 5 items cheapest</div>
+              </div>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <div class="placeholder" style="height: 120px;">📊 Overall basket cost trend over time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Both — Item View + Dashboard</h3>
+      <p>Dashboard as the landing page with summary cards, click through to item-level detail pages. Most complete but more to build.</p>
+    </div>
+  </div>
+</div>

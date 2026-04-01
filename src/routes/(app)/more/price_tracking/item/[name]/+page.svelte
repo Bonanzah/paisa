@@ -6,8 +6,7 @@
     formatChange,
     changeColor,
     renderPriceTimeline,
-    type PriceTrackingItemDetail,
-    type ReceiptItem
+    type PriceTrackingItemDetail
   } from "$lib/price_tracking";
   import { onMount } from "svelte";
   import dayjs from "dayjs";
@@ -48,7 +47,7 @@
   }
 
   onMount(async () => {
-    detail = await ajax(`/api/price_tracking/item/${name}`);
+    detail = await ajax("/api/price_tracking/item/:name", null, { name });
     setTimeout(renderChart, 0);
   });
 </script>
