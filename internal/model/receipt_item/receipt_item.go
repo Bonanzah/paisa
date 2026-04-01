@@ -68,3 +68,20 @@ func DistinctStores(db *gorm.DB) []string {
 	}
 	return stores
 }
+
+func FindByID(db *gorm.DB, id uint) (*ReceiptItem, error) {
+	var item ReceiptItem
+	result := db.First(&item, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &item, nil
+}
+
+func Update(db *gorm.DB, item *ReceiptItem) error {
+	return db.Save(item).Error
+}
+
+func Delete(db *gorm.DB, id uint) error {
+	return db.Delete(&ReceiptItem{}, id).Error
+}
