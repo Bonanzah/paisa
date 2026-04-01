@@ -122,41 +122,105 @@ export function renderPriceTimeline(
     .domain([0, d3.max(allPrices) * 1.1])
     .range([height, 0]);
 
-  g.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
+  g.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x).ticks(d3.timeMonth.every(1)).tickFormat(d3.timeFormat("%b %Y")));
 
-  g.append("g").call(d3.axisLeft(y).tickFormat((d) => formatCurrency(d as number)));
+  g.append("g").call(
+    d3.axisLeft(y).tickFormat((d) => formatCurrency(d as number))
+  );
 
   const line = d3
     .line<ReceiptItem>()
+    .curve(d3.curveMonotoneX)
     .x((d) => x(parseDate(d.date)))
     .y((d) => y(d.unit_price));
 
+  // Tooltip div
+  let tooltip = d3.select("body").select(".pt-tooltip");
+  if (tooltip.empty()) {
+    tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "pt-tooltip")
+      .style("position", "absolute")
+      .style("pointer-events", "none")
+      .style("background", "rgba(0,0,0,0.8)")
+      .style("color", "#fff")
+      .style("padding", "6px 10px")
+      .style("border-radius", "4px")
+      .style("font-size", "12px")
+      .style("display", "none")
+      .style("z-index", "1000");
+  }
+
+  const hiddenStores = new Set<string>();
   const legends: Legend[] = [];
 
   stores.forEach((store, i) => {
     const storeItems = _.sortBy(byStore[store], "date");
     const color = colors(store);
 
-    g.append("path")
+    const pathEl = g
+      .append("path")
       .datum(storeItems)
       .attr("fill", "none")
       .attr("stroke", color)
       .attr("stroke-width", 2)
+      .attr("class", `line-${i}`)
       .attr("d", line);
 
-    g.selectAll(`.dot-${i}`)
+    const dotsEl = g
+      .selectAll(`.dot-${i}`)
       .data(storeItems)
       .join("circle")
+      .attr("class", `dot-${i}`)
       .attr("cx", (d) => x(parseDate(d.date)))
       .attr("cy", (d) => y(d.unit_price))
       .attr("r", 4)
-      .attr("fill", color);
+      .attr("fill", color)
+      .on("mouseenter", (event: MouseEvent, d: ReceiptItem) => {
+        tooltip
+          .style("display", "block")
+          .html(
+            `<strong>${d.store}</strong><br/>` +
+              `${formatCurrency(d.unit_price)}/${d.unit}<br/>` +
+              `${new Date(d.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` +
+              (d.variant ? `<br/>${d.variant}` : "")
+          );
+      })
+      .on("mousemove", (event: MouseEvent) => {
+        tooltip
+          .style("left", event.pageX + 12 + "px")
+          .style("top", event.pageY - 10 + "px");
+      })
+      .on("mouseleave", () => {
+        tooltip.style("display", "none");
+      });
 
-    legends.push({ label: store, color, shape: "circle" });
+    legends.push({
+      label: store,
+      color,
+      shape: "circle",
+      toggle: () => {
+        if (hiddenStores.has(store)) {
+          hiddenStores.delete(store);
+          pathEl.style("display", null);
+          dotsEl.style("display", null);
+        } else {
+          hiddenStores.add(store);
+          pathEl.style("display", "none");
+          dotsEl.style("display", "none");
+        }
+      }
+    });
   });
 
   return {
-    destroy: () => svg.selectAll("*").remove(),
+    destroy: () => {
+      svg.selectAll("*").remove();
+      tooltip.style("display", "none");
+    },
     legends
   };
 }

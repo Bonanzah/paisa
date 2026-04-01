@@ -394,11 +394,12 @@ export interface SavingsGoalProgress {
 }
 
 export interface Legend {
-  shape: "line" | "square" | "texture";
+  shape: "line" | "square" | "texture" | "circle";
   color: string;
   label: string;
   texture?: any;
   onClick?: (legend: Legend) => void;
+  toggle?: () => void;
 
   selected?: boolean;
 }
