@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { ajax, formatCurrency, isMobile } from "$lib/utils";
+  import { ajax, formatCurrency, isMobile, type Legend } from "$lib/utils";
   import LevelItem from "$lib/components/LevelItem.svelte";
   import {
     formatChange,
@@ -17,6 +17,7 @@
   let filterBrand = "";
   let filterVariant = "";
   let chartDestroy: () => void = null;
+  let chartLegends: Legend[] = [];
 
   let editingId: number | null = null;
   let editForm = { store: "", brand: "", variant: "", quantity: "", price: "" };
@@ -124,6 +125,7 @@
       filterVariant
     );
     chartDestroy = result.destroy;
+    chartLegends = result.legends;
   }
 
   $: if (detail && filterStore !== undefined) {
@@ -230,6 +232,22 @@
 
         <div class="column is-12">
           <svg id="d3-price-timeline" height="300" width="100%"></svg>
+            {#if chartLegends.length > 1}
+              <div class="is-flex is-flex-wrap-wrap mt-2" style="gap: 12px;">
+                {#each chartLegends as legend}
+                  <button
+                    class="button is-small is-ghost px-2"
+                    style="text-decoration: none;"
+                    on:click={() => { if (legend.toggle) legend.toggle(); }}
+                  >
+                    <span
+                      style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: {legend.color}; margin-right: 6px;"
+                    ></span>
+                    {legend.label}
+                  </button>
+                {/each}
+              </div>
+            {/if}
         </div>
 
         <div class="column is-12">
