@@ -6,7 +6,8 @@
     formatChange,
     changeColor,
     renderPriceTimeline,
-    type PriceTrackingItemDetail
+    type PriceTrackingItemDetail,
+    type ReceiptItem
   } from "$lib/price_tracking";
   import { onMount } from "svelte";
   import dayjs from "dayjs";
@@ -16,6 +17,50 @@
   let filterBrand = "";
   let filterVariant = "";
   let chartDestroy: () => void = null;
+
+  let editingId: number | null = null;
+  let editForm = { store: "", brand: "", variant: "", quantity: "", price: "" };
+  let deleteConfirmId: number | null = null;
+
+  function startEdit(entry: ReceiptItem) {
+    editingId = entry.id;
+    editForm = {
+      store: entry.store,
+      brand: entry.brand,
+      variant: entry.variant,
+      quantity: String(entry.quantity),
+      price: String(entry.price)
+    };
+  }
+
+  function cancelEdit() {
+    editingId = null;
+  }
+
+  async function saveEdit(id: number) {
+    await ajax("/api/price_tracking/receipt_item/:id", {
+      method: "PUT",
+      body: JSON.stringify({
+        store: editForm.store,
+        brand: editForm.brand,
+        variant: editForm.variant,
+        quantity: parseFloat(editForm.quantity),
+        price: parseFloat(editForm.price)
+      })
+    }, { id: String(id) });
+    editingId = null;
+    detail = await ajax("/api/price_tracking/item/:name", null, { name });
+    setTimeout(renderChart, 0);
+  }
+
+  async function deleteEntry(id: number) {
+    await ajax("/api/price_tracking/receipt_item/:id", {
+      method: "DELETE"
+    }, { id: String(id) });
+    deleteConfirmId = null;
+    detail = await ajax("/api/price_tracking/item/:name", null, { name });
+    setTimeout(renderChart, 0);
+  }
 
   $: name = $page.params.name;
 
@@ -198,7 +243,7 @@
                   <th>Variant</th>
                   <th class="has-text-right">Qty</th>
                   <th class="has-text-right">Unit Price</th>
-                  <th class="has-text-right">Change</th>
+                  <th class="has-text-right">Change / Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -208,26 +253,70 @@
                     prev && prev.unit_price !== 0
                       ? ((entry.unit_price - prev.unit_price) / prev.unit_price) * 100
                       : null}
-                  <tr>
-                    <td>{dayjs(entry.date).format("MMM D, YYYY")}</td>
-                    <td>{entry.store}</td>
-                    <td>{entry.brand}</td>
-                    <td>{entry.variant}</td>
-                    <td class="has-text-right">
-                      {entry.quantity}
-                      {entry.unit}
-                    </td>
-                    <td class="has-text-right">{formatCurrency(entry.unit_price)}</td>
-                    <td class="has-text-right">
-                      {#if pctChange !== null}
-                        <span style="color: {changeColor(pctChange)}"
-                          >{formatChange(pctChange)}</span
-                        >
-                      {:else}
-                        <span class="has-text-grey">—</span>
-                      {/if}
-                    </td>
-                  </tr>
+                  {#if editingId === entry.id}
+                    <tr>
+                      <td>{dayjs(entry.date).format("MMM D, YYYY")}</td>
+                      <td><input class="input is-small" bind:value={editForm.store} /></td>
+                      <td><input class="input is-small" bind:value={editForm.brand} /></td>
+                      <td><input class="input is-small" bind:value={editForm.variant} /></td>
+                      <td class="has-text-right">
+                        <input
+                          class="input is-small"
+                          type="number"
+                          step="any"
+                          bind:value={editForm.quantity}
+                          style="width: 70px; display: inline-block;"
+                        />
+                        {entry.unit}
+                      </td>
+                      <td class="has-text-right">
+                        <input
+                          class="input is-small"
+                          type="number"
+                          step="any"
+                          bind:value={editForm.price}
+                          style="width: 80px; display: inline-block;"
+                        />
+                      </td>
+                      <td class="has-text-right">
+                        <button class="button is-small is-success mr-1" on:click={() => saveEdit(entry.id)}>Save</button>
+                        <button class="button is-small" on:click={cancelEdit}>Cancel</button>
+                      </td>
+                    </tr>
+                  {:else}
+                    <tr>
+                      <td>{dayjs(entry.date).format("MMM D, YYYY")}</td>
+                      <td>{entry.store}</td>
+                      <td>{entry.brand}</td>
+                      <td>{entry.variant}</td>
+                      <td class="has-text-right">
+                        {entry.quantity}
+                        {entry.unit}
+                      </td>
+                      <td class="has-text-right">{formatCurrency(entry.unit_price)}</td>
+                      <td class="has-text-right">
+                        {#if deleteConfirmId === entry.id}
+                          <span class="is-size-7 mr-2">Delete?</span>
+                          <button class="button is-small is-danger mr-1" on:click={() => deleteEntry(entry.id)}>Yes</button>
+                          <button class="button is-small" on:click={() => (deleteConfirmId = null)}>No</button>
+                        {:else}
+                          {#if pctChange !== null}
+                            <span style="color: {changeColor(pctChange)}" class="mr-2"
+                              >{formatChange(pctChange)}</span
+                            >
+                          {:else}
+                            <span class="has-text-grey mr-2">—</span>
+                          {/if}
+                          <button class="button is-small is-ghost px-1" title="Edit" on:click={() => startEdit(entry)}>
+                            ✎
+                          </button>
+                          <button class="button is-small is-ghost px-1 has-text-danger" title="Delete" on:click={() => (deleteConfirmId = entry.id)}>
+                            ✕
+                          </button>
+                        {/if}
+                      </td>
+                    </tr>
+                  {/if}
                 {/each}
               </tbody>
             </table>
