@@ -1,7 +1,9 @@
 package server
 
 import (
+	"strings"
 	"time"
+	"unicode"
 
 	"github.com/ananthakumaran/paisa/internal/model/receipt_item"
 	"github.com/gin-gonic/gin"
@@ -40,10 +42,10 @@ func PostReceipt(db *gorm.DB, request ReceiptRequest) gin.H {
 
 		items = append(items, receipt_item.ReceiptItem{
 			Date:      date,
-			Store:     request.Store,
-			Name:      ri.Name,
-			Brand:     ri.Brand,
-			Variant:   ri.Variant,
+			Store:     normalizeToTitle(request.Store),
+			Name:      normalizeToLower(ri.Name),
+			Brand:     normalizeToTitle(ri.Brand),
+			Variant:   normalizeToLower(ri.Variant),
 			Unit:      ri.Unit,
 			Quantity:  ri.Quantity,
 			Price:     ri.Price,
@@ -316,4 +318,25 @@ func setToSlice(set map[string]bool) []string {
 		result = append(result, key)
 	}
 	return result
+}
+
+func normalizeToLower(s string) string {
+	return strings.ToLower(strings.TrimSpace(s))
+}
+
+func normalizeToTitle(s string) string {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return s
+	}
+	words := strings.Fields(s)
+	for i, word := range words {
+		runes := []rune(word)
+		runes[0] = unicode.ToUpper(runes[0])
+		for j := 1; j < len(runes); j++ {
+			runes[j] = unicode.ToLower(runes[j])
+		}
+		words[i] = string(runes)
+	}
+	return strings.Join(words, " ")
 }
