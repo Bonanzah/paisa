@@ -375,6 +375,28 @@ func Build(db *gorm.DB, enableCompression bool) *gin.Engine {
 		c.JSON(200, GetCreditCard(db, c.Param("account")))
 	})
 
+	router.POST("/api/price_tracking/receipt", func(c *gin.Context) {
+		var request ReceiptRequest
+		if err := c.ShouldBindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "error": err.Error()})
+			return
+		}
+		c.JSON(200, PostReceipt(db, request))
+	})
+
+	router.GET("/api/price_tracking", func(c *gin.Context) {
+		c.JSON(200, GetPriceTracking(db))
+	})
+
+	router.GET("/api/price_tracking/items", func(c *gin.Context) {
+		c.JSON(200, GetPriceTrackingItems(db))
+	})
+
+	router.GET("/api/price_tracking/item/:name", func(c *gin.Context) {
+		name := c.Param("name")
+		c.JSON(200, GetPriceTrackingItem(db, name))
+	})
+
 	router.NoRoute(func(c *gin.Context) {
 		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(web.Index))
 	})
