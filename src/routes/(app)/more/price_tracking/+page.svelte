@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    ajax,
-    formatCurrency,
-    isMobile
-  } from "$lib/utils";
+  import { ajax, formatCurrency, isMobile } from "$lib/utils";
   import LevelItem from "$lib/components/LevelItem.svelte";
   import ZeroState from "$lib/components/ZeroState.svelte";
   import {

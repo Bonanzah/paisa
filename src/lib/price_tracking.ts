@@ -147,6 +147,6 @@ export function renderPriceTimeline(
 
   return {
     destroy: () => svg.selectAll("*").remove(),
-    legends,
+    legends
   };
 }
