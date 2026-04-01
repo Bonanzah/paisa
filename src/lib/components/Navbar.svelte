@@ -118,6 +118,7 @@
       label: "More",
       href: "/more",
       children: [
+        { label: "Price Tracking", href: "/price_tracking" },
         { label: "Configuration", href: "/config", help: "config" },
         { label: "Sheets", href: "/sheets", help: "sheets", disablePreload: true },
         { label: "Goals", href: "/goals", help: "goals" },
