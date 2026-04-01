@@ -79,6 +79,16 @@ type RecentEntry struct {
 	Count int       `json:"count"`
 }
 
+type ItemSummary struct {
+	Name          string          `json:"name"`
+	Unit          string          `json:"unit"`
+	LatestPrice   decimal.Decimal `json:"latest_price"`
+	AvgPrice      decimal.Decimal `json:"avg_price"`
+	Change        decimal.Decimal `json:"change"`
+	StoresCount   int             `json:"stores_count"`
+	LastPurchased time.Time       `json:"last_purchased"`
+}
+
 func GetPriceTracking(db *gorm.DB) gin.H {
 	items := receipt_item.All(db)
 	names := receipt_item.DistinctNames(db)
@@ -337,6 +347,80 @@ func DeleteReceiptItem(db *gorm.DB, id uint) (gin.H, int) {
 	}
 
 	return gin.H{"success": true}, 200
+}
+
+func GetPriceTrackingItemsSummary(db *gorm.DB) gin.H {
+	items := receipt_item.All(db)
+	names := receipt_item.DistinctNames(db)
+
+	if len(items) == 0 {
+		return gin.H{"items": []ItemSummary{}}
+	}
+
+	byName := make(map[string][]receipt_item.ReceiptItem)
+	for _, item := range items {
+		byName[item.Name] = append(byName[item.Name], item)
+	}
+
+	thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
+	ninetyDaysAgo := time.Now().AddDate(0, 0, -90)
+
+	var summaries []ItemSummary
+	for _, name := range names {
+		nameItems := byName[name]
+		if len(nameItems) == 0 {
+			continue
+		}
+
+		latest := nameItems[0]
+
+		// 90-day average
+		sum := decimal.Zero
+		count := 0
+		for _, item := range nameItems {
+			if item.Date.After(ninetyDaysAgo) {
+				sum = sum.Add(item.UnitPrice)
+				count++
+			}
+		}
+		avgPrice := decimal.Zero
+		if count > 0 {
+			avgPrice = sum.Div(decimal.NewFromInt(int64(count)))
+		}
+
+		// 30-day change
+		change := decimal.Zero
+		if len(nameItems) >= 2 {
+			var baseline *receipt_item.ReceiptItem
+			for i := range nameItems {
+				if nameItems[i].Date.Before(thirtyDaysAgo) {
+					baseline = &nameItems[i]
+					break
+				}
+			}
+			if baseline != nil && !baseline.UnitPrice.IsZero() {
+				change = latest.UnitPrice.Sub(baseline.UnitPrice).Div(baseline.UnitPrice).Mul(decimal.NewFromInt(100))
+			}
+		}
+
+		// Distinct stores
+		storeSet := make(map[string]bool)
+		for _, item := range nameItems {
+			storeSet[item.Store] = true
+		}
+
+		summaries = append(summaries, ItemSummary{
+			Name:          name,
+			Unit:          latest.Unit,
+			LatestPrice:   latest.UnitPrice,
+			AvgPrice:      avgPrice,
+			Change:        change,
+			StoresCount:   len(storeSet),
+			LastPurchased: latest.Date,
+		})
+	}
+
+	return gin.H{"items": summaries}
 }
 
 func sortMovers(movers []PriceMover, ascending bool) {

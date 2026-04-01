@@ -393,6 +393,10 @@ func Build(db *gorm.DB, enableCompression bool) *gin.Engine {
 		c.JSON(200, GetPriceTrackingItems(db))
 	})
 
+	router.GET("/api/price_tracking/items/summary", func(c *gin.Context) {
+		c.JSON(200, GetPriceTrackingItemsSummary(db))
+	})
+
 	router.GET("/api/price_tracking/item/:name", func(c *gin.Context) {
 		name := c.Param("name")
 		c.JSON(200, GetPriceTrackingItem(db, name))
