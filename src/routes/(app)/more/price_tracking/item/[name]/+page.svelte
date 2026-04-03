@@ -152,6 +152,13 @@
     {#if detail}
       <div class="columns is-flex-wrap-wrap">
         <div class="column is-12">
+          <button
+            class="button is-small is-ghost px-0 mb-3"
+            style="text-decoration: none;"
+            on:click={() => history.back()}
+          >
+            ← Back
+          </button>
           <h2 class="title is-4 mb-2">{detail.name}</h2>
           {#if detail.latest}
             <nav class="level {isMobile() && 'grid-2'}">
@@ -227,7 +234,7 @@
               <tbody>
                 {#each storeComparisons as sc (sc.store)}
                   <tr>
-                    <td>{sc.store}</td>
+                    <td><a class="secondary-link" href="/more/price_tracking/store/{sc.store}">{sc.store}</a></td>
                     <td class="has-text-right"
                       >{formatCurrency(sc.latestPrice)}/{detail.latest.unit}</td
                     >
