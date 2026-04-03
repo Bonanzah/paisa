@@ -9,7 +9,7 @@
     type PriceTrackingStoreDetail,
     type ItemSummary
   } from "$lib/price_tracking";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import dayjs from "dayjs";
 
   let detail: PriceTrackingStoreDetail = null;
@@ -115,6 +115,10 @@
     detail = storeDetail;
     itemsSummary = summary.items || [];
     setTimeout(renderChart, 0);
+  });
+
+  onDestroy(() => {
+    if (chartDestroy) chartDestroy();
   });
 </script>
 
