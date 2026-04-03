@@ -248,7 +248,7 @@ export function renderStoreAvgPriceTimeline(
   }
 
   // Group entries by date and compute average unit price per date
-  const byDate = _.groupBy(entries, (e) => e.date.substring(0, 10));
+  const byDate = _.groupBy(entries, (e) => new Date(e.date).toISOString().substring(0, 10));
   const dateAvgs = Object.entries(byDate)
     .map(([date, items]) => ({
       date: new Date(date),
