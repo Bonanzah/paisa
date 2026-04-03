@@ -234,7 +234,11 @@
               <tbody>
                 {#each storeComparisons as sc (sc.store)}
                   <tr>
-                    <td><a class="secondary-link" href="/more/price_tracking/store/{sc.store}">{sc.store}</a></td>
+                    <td
+                      ><a class="secondary-link" href="/more/price_tracking/store/{sc.store}"
+                        >{sc.store}</a
+                      ></td
+                    >
                     <td class="has-text-right"
                       >{formatCurrency(sc.latestPrice)}/{detail.latest.unit}</td
                     >

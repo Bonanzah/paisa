@@ -133,10 +133,7 @@
           <h2 class="title is-4 mb-2">{detail.store}</h2>
           <nav class="level {isMobile() && 'grid-2'}">
             <LevelItem title="Items Tracked" value={String(detail.item_count)} />
-            <LevelItem
-              title="Avg Unit Price"
-              value={formatCurrency(detail.avg_unit_price)}
-            />
+            <LevelItem title="Avg Unit Price" value={formatCurrency(detail.avg_unit_price)} />
             <LevelItem
               title="Price Trend (90d)"
               value={formatChange(detail.change)}
@@ -144,7 +141,9 @@
             />
             <LevelItem
               title="Last Purchase"
-              value={detail.last_purchased ? dayjs(detail.last_purchased).format("MMM D, YYYY") : "—"}
+              value={detail.last_purchased
+                ? dayjs(detail.last_purchased).format("MMM D, YYYY")
+                : "—"}
             />
           </nav>
         </div>
@@ -195,7 +194,10 @@
                   <th class="is-clickable" on:click={() => toggleSort("name")}>
                     Item {sortBy === "name" ? (sortAsc ? "↑" : "↓") : ""}
                   </th>
-                  <th class="has-text-right is-clickable" on:click={() => toggleSort("latest_price")}>
+                  <th
+                    class="has-text-right is-clickable"
+                    on:click={() => toggleSort("latest_price")}
+                  >
                     Latest Price {sortBy === "latest_price" ? (sortAsc ? "↑" : "↓") : ""}
                   </th>
                   <th class="has-text-right">vs Other Stores</th>
@@ -234,7 +236,8 @@
                         <span class="has-text-grey">—</span>
                       {/if}
                     </td>
-                    <td class="has-text-right">{dayjs(item.lastPurchased).format("MMM D, YYYY")}</td>
+                    <td class="has-text-right">{dayjs(item.lastPurchased).format("MMM D, YYYY")}</td
+                    >
                   </tr>
                 {/each}
               </tbody>

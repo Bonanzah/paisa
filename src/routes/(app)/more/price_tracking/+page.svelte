@@ -140,7 +140,9 @@
               <div class="is-flex is-justify-content-space-between py-2 border-bottom">
                 <span>
                   <span class="has-text-grey is-size-7 mr-2">#{i + 1}</span>
-                  <a class="secondary-link" href="/more/price_tracking/store/{ranking.store}">{ranking.store}</a>
+                  <a class="secondary-link" href="/more/price_tracking/store/{ranking.store}"
+                    >{ranking.store}</a
+                  >
                 </span>
                 <span class="has-text-weight-bold is-size-7">{ranking.count} items cheapest</span>
               </div>
@@ -150,7 +152,9 @@
             {#each dashboard.recent ?? [] as entry (entry.date + entry.store)}
               <div class="is-flex is-justify-content-space-between py-2 border-bottom">
                 <span class="has-text-grey is-size-7">{dayjs(entry.date).format("MMM D")}</span>
-                <a class="secondary-link" href="/more/price_tracking/store/{entry.store}">{entry.store}</a>
+                <a class="secondary-link" href="/more/price_tracking/store/{entry.store}"
+                  >{entry.store}</a
+                >
                 <span class="is-size-7">{entry.count} items</span>
               </div>
             {/each}
