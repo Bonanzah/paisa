@@ -51,6 +51,15 @@ func ByName(db *gorm.DB, name string) []ReceiptItem {
 	return items
 }
 
+func ByStore(db *gorm.DB, store string) []ReceiptItem {
+	var items []ReceiptItem
+	result := db.Where("store = ?", store).Order("date DESC").Find(&items)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+	}
+	return items
+}
+
 func DistinctNames(db *gorm.DB) []string {
 	var names []string
 	result := db.Model(&ReceiptItem{}).Distinct("name").Order("name").Pluck("name", &names)
