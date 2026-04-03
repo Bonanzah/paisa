@@ -805,6 +805,12 @@ export function ajax(
   params?: Record<string, string>
 ): Promise<{ success: boolean; item?: any; error?: string }>;
 
+export function ajax(
+  route: "/api/price_tracking/store/:name",
+  options?: RequestOptions,
+  params?: Record<string, string>
+): Promise<import("$lib/price_tracking").PriceTrackingStoreDetail>;
+
 export async function ajax(
   route: string,
   options?: RequestOptions,

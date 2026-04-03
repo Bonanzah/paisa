@@ -65,6 +65,16 @@ export interface ItemSummary {
   last_purchased: string;
 }
 
+export interface PriceTrackingStoreDetail {
+  store: string;
+  entries: ReceiptItem[];
+  items: string[];
+  item_count: number;
+  avg_unit_price: number;
+  change: number;
+  last_purchased: string;
+}
+
 export function formatChange(change: number): string {
   const sign = change >= 0 ? "▲" : "▼";
   return `${sign} ${Math.abs(change).toFixed(1)}%`;
@@ -220,5 +230,114 @@ export function renderPriceTimeline(
       tooltip.style("display", "none");
     },
     legends
+  };
+}
+
+export function renderStoreAvgPriceTimeline(
+  id: string,
+  entries: ReceiptItem[]
+): { destroy: () => void } {
+  const el = document.getElementById(id.substring(1));
+  if (!el) return { destroy: () => {} };
+
+  const svg = d3.select(id);
+  svg.selectAll("*").remove();
+
+  if (entries.length === 0) {
+    return { destroy: () => {} };
+  }
+
+  // Group entries by date and compute average unit price per date
+  const byDate = _.groupBy(entries, (e) => e.date.substring(0, 10));
+  const dateAvgs = Object.entries(byDate)
+    .map(([date, items]) => ({
+      date: new Date(date),
+      avg: items.reduce((sum, e) => sum + e.unit_price, 0) / items.length
+    }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  const margin = { top: 20, right: 30, bottom: 40, left: 60 };
+  const width = el.parentElement.clientWidth - margin.left - margin.right;
+  const height = +svg.attr("height") - margin.top - margin.bottom;
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const x = d3
+    .scaleTime()
+    .domain(d3.extent(dateAvgs, (d) => d.date) as [Date, Date])
+    .range([0, width]);
+
+  const y = d3
+    .scaleLinear()
+    .domain([0, d3.max(dateAvgs, (d) => d.avg) * 1.1])
+    .range([height, 0]);
+
+  g.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x).ticks(d3.timeMonth.every(1)).tickFormat(d3.timeFormat("%b %Y")));
+
+  g.append("g").call(d3.axisLeft(y).tickFormat((d) => formatCurrency(d as number)));
+
+  const line = d3
+    .line<{ date: Date; avg: number }>()
+    .curve(d3.curveMonotoneX)
+    .x((d) => x(d.date))
+    .y((d) => y(d.avg));
+
+  g.append("path")
+    .datum(dateAvgs)
+    .attr("fill", "none")
+    .attr("stroke", "#3273dc")
+    .attr("stroke-width", 2)
+    .attr("d", line);
+
+  // Tooltip
+  let tooltip = d3.select("body").select(".pt-tooltip");
+  if (tooltip.empty()) {
+    tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "pt-tooltip")
+      .style("position", "absolute")
+      .style("pointer-events", "none")
+      .style("background", "rgba(0,0,0,0.8)")
+      .style("color", "#fff")
+      .style("padding", "6px 10px")
+      .style("border-radius", "4px")
+      .style("font-size", "12px")
+      .style("display", "none")
+      .style("z-index", "1000");
+  }
+
+  g.selectAll(".dot")
+    .data(dateAvgs)
+    .join("circle")
+    .attr("class", "dot")
+    .attr("cx", (d) => x(d.date))
+    .attr("cy", (d) => y(d.avg))
+    .attr("r", 4)
+    .attr("fill", "#3273dc")
+    .on("mouseenter", (event: MouseEvent, d: { date: Date; avg: number }) => {
+      tooltip.style("display", "block").html(
+        `<strong>Avg Unit Price</strong><br/>` +
+          `${formatCurrency(d.avg)}<br/>` +
+          `${d.date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          })}`
+      );
+    })
+    .on("mousemove", (event: MouseEvent) => {
+      tooltip.style("left", event.pageX + 12 + "px").style("top", event.pageY - 10 + "px");
+    })
+    .on("mouseleave", () => {
+      tooltip.style("display", "none");
+    });
+
+  return {
+    destroy: () => {
+      svg.selectAll("*").remove();
+      tooltip.style("display", "none");
+    }
   };
 }
