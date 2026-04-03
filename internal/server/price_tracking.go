@@ -286,6 +286,66 @@ func GetPriceTrackingItem(db *gorm.DB, name string) gin.H {
 	}
 }
 
+func GetPriceTrackingStore(db *gorm.DB, storeName string) gin.H {
+	items := receipt_item.ByStore(db, storeName)
+
+	if len(items) == 0 {
+		return gin.H{
+			"store":          storeName,
+			"entries":        []receipt_item.ReceiptItem{},
+			"items":          []string{},
+			"item_count":     0,
+			"avg_unit_price": decimal.Zero,
+			"change":         decimal.Zero,
+			"last_purchased": nil,
+		}
+	}
+
+	nameSet := make(map[string]bool)
+	sum := decimal.Zero
+	for _, item := range items {
+		nameSet[item.Name] = true
+		sum = sum.Add(item.UnitPrice)
+	}
+
+	avg := sum.Div(decimal.NewFromInt(int64(len(items))))
+
+	// 90-day change: compare average unit price of latest entries vs entries from 90+ days ago
+	ninetyDaysAgo := time.Now().AddDate(0, 0, -90)
+	recentSum := decimal.Zero
+	recentCount := 0
+	oldSum := decimal.Zero
+	oldCount := 0
+	for _, item := range items {
+		if item.Date.After(ninetyDaysAgo) {
+			recentSum = recentSum.Add(item.UnitPrice)
+			recentCount++
+		} else {
+			oldSum = oldSum.Add(item.UnitPrice)
+			oldCount++
+		}
+	}
+
+	change := decimal.Zero
+	if recentCount > 0 && oldCount > 0 {
+		recentAvg := recentSum.Div(decimal.NewFromInt(int64(recentCount)))
+		oldAvg := oldSum.Div(decimal.NewFromInt(int64(oldCount)))
+		if !oldAvg.IsZero() {
+			change = recentAvg.Sub(oldAvg).Div(oldAvg).Mul(decimal.NewFromInt(100))
+		}
+	}
+
+	return gin.H{
+		"store":          storeName,
+		"entries":        items,
+		"items":          setToSlice(nameSet),
+		"item_count":     len(nameSet),
+		"avg_unit_price": avg,
+		"change":         change,
+		"last_purchased": items[0].Date,
+	}
+}
+
 type UpdateReceiptItemRequest struct {
 	Store    *string          `json:"store"`
 	Brand    *string          `json:"brand"`

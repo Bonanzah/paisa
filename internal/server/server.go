@@ -402,6 +402,11 @@ func Build(db *gorm.DB, enableCompression bool) *gin.Engine {
 		c.JSON(200, GetPriceTrackingItem(db, name))
 	})
 
+	router.GET("/api/price_tracking/store/:name", func(c *gin.Context) {
+		name := c.Param("name")
+		c.JSON(200, GetPriceTrackingStore(db, name))
+	})
+
 	router.PUT("/api/price_tracking/receipt_item/:id", func(c *gin.Context) {
 		id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 		if err != nil {
